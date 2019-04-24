@@ -32,6 +32,10 @@ Tab "0..*" --> "1" RegMan
 Window "1" --> "1" Settings
 Tab "1..*" --> "1" CacheManager
 HotkeyList "1" *-- "1..*" Hotkey
-Extension 
+Extension "1..*" --o "1" ContextGroup
+ContextGroup "1" *-- "1..*" ContextAction
+ContextAction "1" --> "1" Hotkey
+ExtensionManager "1" *-- "0..*" Extension
+Tab "1..*" --> "1" ExtensionManager
 
 @enduml
