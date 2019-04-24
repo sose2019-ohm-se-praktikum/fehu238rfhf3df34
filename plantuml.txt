@@ -1,0 +1,20 @@
+@startuml
+
+class Window
+class Tab
+class CacheManager
+class Directory
+class File
+class RegMan
+class Settings
+class Setting
+
+Settings "1" *-- "0..*" Setting
+Window "1" *-- "1..*" Tab
+CacheManager "1" o-- "0..*" Directory
+Directory "1" *-- "0..*" File
+Tab "0..*" --> "1" RegMan
+Window "1" --> "1" Settings
+Tab "1..*" --> "1" CacheManager
+
+@enduml
