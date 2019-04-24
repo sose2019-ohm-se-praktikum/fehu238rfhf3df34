@@ -4,10 +4,25 @@ class Window
 class Tab
 class CacheManager
 class Directory
-class File
+class File {
+    +Name : string
+    +Extension : Extension
+    +Size : ulong
+    +LastModified : DateTime
+    +LastAccessed : DateTime
+    +Created : DateTime
+    +Directory : Directory
+    
+}
 class RegMan
 class Settings
 class Setting
+class ExtensionManager
+class Extension
+class ContextAction
+class Hotkey
+class HotkeyList
+class ContextGroup
 
 Settings "1" *-- "0..*" Setting
 Window "1" *-- "1..*" Tab
@@ -16,5 +31,7 @@ Directory "1" *-- "0..*" File
 Tab "0..*" --> "1" RegMan
 Window "1" --> "1" Settings
 Tab "1..*" --> "1" CacheManager
+HotkeyList "1" *-- "1..*" Hotkey
+Extension 
 
 @enduml
