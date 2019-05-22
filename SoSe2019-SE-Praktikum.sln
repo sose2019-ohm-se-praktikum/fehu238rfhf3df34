@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFE", "src\MFE\MFE.csproj", "{D3DA5104-34FA-4DFF-956C-6A151D05C731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFE.Console", "src\MFE.Console\MFE.Console.csproj", "{1650A7B0-469E-4263-8A11-DF1DEEC11AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFE.WPF", "src\MFE.WPF\MFE.WPF.csproj", "{40D8D3F0-05A5-4086-BE72-75F359CD29C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3DA5104-34FA-4DFF-956C-6A151D05C731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DA5104-34FA-4DFF-956C-6A151D05C731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DA5104-34FA-4DFF-956C-6A151D05C731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DA5104-34FA-4DFF-956C-6A151D05C731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1650A7B0-469E-4263-8A11-DF1DEEC11AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1650A7B0-469E-4263-8A11-DF1DEEC11AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1650A7B0-469E-4263-8A11-DF1DEEC11AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1650A7B0-469E-4263-8A11-DF1DEEC11AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40D8D3F0-05A5-4086-BE72-75F359CD29C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40D8D3F0-05A5-4086-BE72-75F359CD29C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40D8D3F0-05A5-4086-BE72-75F359CD29C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40D8D3F0-05A5-4086-BE72-75F359CD29C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60862722-D54E-49D0-9A8B-F8ACCA00AC6E}
+	EndGlobalSection
+EndGlobal
