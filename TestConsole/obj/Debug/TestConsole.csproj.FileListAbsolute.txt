@@ -1,7 +1,0 @@
-D:\Visual Studio Projects\TestConsole\TestConsole\bin\Debug\TestConsole.exe.config
-D:\Visual Studio Projects\TestConsole\TestConsole\bin\Debug\TestConsole.exe
-D:\Visual Studio Projects\TestConsole\TestConsole\bin\Debug\TestConsole.pdb
-D:\Visual Studio Projects\TestConsole\TestConsole\obj\Debug\TestConsole.csprojAssemblyReference.cache
-D:\Visual Studio Projects\TestConsole\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache
-D:\Visual Studio Projects\TestConsole\TestConsole\obj\Debug\TestConsole.exe
-D:\Visual Studio Projects\TestConsole\TestConsole\obj\Debug\TestConsole.pdb
