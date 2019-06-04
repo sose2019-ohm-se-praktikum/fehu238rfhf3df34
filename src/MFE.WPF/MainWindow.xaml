@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MFE.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Sound Volume Evener" Height="250" Width="610" ResizeMode="NoResize">
     <Grid>
-        
+        <Label Content="Eingabeordner" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btn_chooseInputDirectory" Content="Wählen" HorizontalAlignment="Left" Margin="509,9,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Btn_chooseInputDirectory_Click"/>
+        <TextBox x:Name="tb_inputDirectory" HorizontalAlignment="Left" Height="23" Margin="103,9,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
+        <Button x:Name="btn_start" Content="Starten" Margin="190,133,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" Height="28" IsEnabled="False" Click="Btn_start_Click"/>
+        <Button x:Name="btn_cancel" Content="Abbrechen" HorizontalAlignment="Right" Margin="0,133,190,0" VerticalAlignment="Top" Width="100" Height="28" IsEnabled="False" Click="Btn_cancel_Click" />
+        <ProgressBar x:Name="pg_progress" HorizontalAlignment="Left" Height="30" Margin="10,171,0,0" VerticalAlignment="Top" Width="574"/>
+        <Label Content="Ausgabeordner" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_outputDirectory" HorizontalAlignment="Left" Height="23" Margin="103,40,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
+        <Button x:Name="btn_chooseOutputDirectory" Content="Wählen" HorizontalAlignment="Left" Margin="509,40,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Btn_chooseOutputDirectory_Click"/>
     </Grid>
 </Window>
