@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestConsole
+namespace MFE
 {
-  internal class WaveSound<T> : AudioFile<T>
+  internal class WaveSound : AudioFile
   {
-    public WaveSound(byte[] buffer) : base(buffer) { }
+    public WaveSound(string path) : base(path) { }
 
     private bool _little_endian;
     private int step;

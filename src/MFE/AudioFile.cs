@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace TestConsole
+namespace MFE
 {
-  internal abstract class AudioFile<IdentifierType>
+  internal abstract class AudioFile
   {
     /// <summary>
     /// Defines a formula that returns the relative weight of a sample regarding average calculation.
@@ -28,7 +26,8 @@ namespace TestConsole
     /// <summary>
     /// Defines a formula that returns the relative weight of a sample regarding average calculation. The default is 1 for all ratios.
     /// </summary>
-    public static WeighSampleFormula WeightFormula {
+    public static WeighSampleFormula WeightFormula
+    {
       get => wsf;
       set => wsf = value ?? wsf;
     }
@@ -36,7 +35,8 @@ namespace TestConsole
     /// <summary>
     /// Defines a formula that returns the adjusted sample. The default is sample * targetAverage / currentAverage.
     /// </summary>
-    public static AdjustSampleFormula AdjustmentFormula {
+    public static AdjustSampleFormula AdjustmentFormula
+    {
       get => asf;
       set => asf = value ?? asf;
     }
@@ -45,27 +45,21 @@ namespace TestConsole
     private static AdjustSampleFormula asf = (sample, target, current) => sample * target / current;
 
     /// <summary>
-    /// Creates an AudioFile from a buffer.
+    /// Tries to create an AudioFile.
     /// </summary>
-    /// <param name="buffer">the file to modify</param>
-    /// <param name="token"></param>
-    /// <returns>the created AudioFile on success, null otherwise</returns>
-    public static async Task<AudioFile<IdentifierType>> FromBuffer(byte[] buffer, CancellationToken token = default(CancellationToken))
+    /// <param name="path">absolute path to a valid file</param>
+    /// <returns>an AudioFile on success, null on failure</returns>
+    public static AudioFile OpenFile(string path)
     {
-      return await Task.Run(() => {
-        try {
-          return new WaveSound<IdentifierType>(buffer);
-        }
-        catch {
-          return null;
-        }
-      }, token);
+      try
+      {
+        return new WaveSound(path);
+      }
+      catch
+      {
+        return null;
+      }
     }
-
-    /// <summary>
-    /// optional - an object that can be used to identify the AudioFile
-    /// </summary>
-    public IdentifierType Identifier { get; set; }
 
     /// <summary>
     /// the weighted average as calculated using AudioFile.WeightFormula
@@ -77,13 +71,28 @@ namespace TestConsole
     /// </summary>
     public double Highest { get; }
 
-    protected AudioFile(byte[] buffer)
+    private byte[] Buffer
     {
-      Identifier = default(IdentifierType);
-      double[] samples = DecodeSamples(buffer);
+      get
+      {
+        byte[] buffer = new byte[file.Length];
+        file.Position = 0L;
+        file.Read(buffer, 0, (int)file.Length);
+        return buffer;
+      }
+    }
+
+    private FileStream file;
+
+    protected AudioFile(string path)
+    {
+      file = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
+      file.Lock(0L, file.Length);
+      double[] samples = DecodeSamples(Buffer);
       Highest = samples.Max(sample => Math.Abs(sample));
       double average = samples.Average(sample => Math.Abs(sample)), dividend = 0d, divisor = 0d;
-      foreach (double sample in samples) {
+      foreach (double sample in samples)
+      {
         double weight = WeightFormula(sample / average);
         dividend += sample * weight;
         divisor += weight;
@@ -91,25 +100,30 @@ namespace TestConsole
       WeightedAverage = dividend / divisor;
     }
 
+    ~AudioFile()
+    {
+      file.Unlock(0L, file.Length);
+      file.Dispose();
+    }
+
     /// <summary>
     /// The samples are read from the buffer, adjusted and written back to it.
     /// </summary>
     /// <param name="targetAverage">the average to reach</param>
-    /// <param name="buffer">the buffer that contains the file to be modified - This will contain the new bytes on success.</param>
-    /// <param name="token"></param>
-    /// <returns>true on success, false on error</returns>
-    public async Task<bool> AdjustSamples(double targetAverage, byte[] buffer, CancellationToken token = default(CancellationToken))
+    /// <param name="targetPath">the file path to write the new file to - null to write to the original</param>
+    public void AdjustSamples(double targetAverage, string targetPath=null)
     {
-      return await Task.Run(() => {
-        if (WouldFit(targetAverage)) {
-          try {
-            EncodeSamples(DecodeSamples(buffer).Select(sample => AdjustmentFormula(sample, targetAverage, WeightedAverage)), buffer).CopyTo(buffer, 0L);
-            return true;
-          }
-          catch { }
+      if (WouldFit(targetAverage))
+      {
+        byte[] buffer = Buffer;
+        if (targetPath == null)
+        {
+          file.Position = 0L;
+          file.Write(EncodeSamples(DecodeSamples(buffer).Select(sample => AdjustmentFormula(sample, targetAverage, WeightedAverage)), buffer), 0, buffer.Length);
         }
-        return false;
-      }, token);
+        else
+          File.WriteAllBytes(targetPath, buffer);
+      } else throw new ArgumentException("With the given target average overmodulation would occur.", "targetAverage");
     }
 
     /// <summary>
