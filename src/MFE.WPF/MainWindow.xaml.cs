@@ -23,20 +23,20 @@ namespace MFE.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CancellationTokenSource cancellationToken;
-        private Progress<float> progress;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private Progress<float> progress = new Progress<float>();
+
+        private bool isRunning = false;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            cancellationToken = new CancellationTokenSource();
-            progress = new Progress<float>();
-            progress.ProgressChanged += Progress_ProgressChanged;
-            cancellationToken.Token.Register(updateStates);
+            progress.ProgressChanged += OnProgressChanged;
+            cancellationTokenSource.Token.Register(OnCanceled);
         }
 
-        private void Progress_ProgressChanged(object sender, float e)
+        private void OnProgressChanged(object sender, float e)
         {
             pg_progress.Value = e * 100;
         }
@@ -82,30 +82,48 @@ namespace MFE.WPF
         {
             var settings = new SoundVolumeEvenerSettings();
             settings.OutputDirectory = tb_outputDirectory.Text;
-            btn_start.IsEnabled = false;
-            btn_cancel.IsEnabled = true;
-            await SoundVolumeEvener.RunSoundVolumeEvening(new DirectoryInfo(tb_inputDirectory.Text).EnumerateFiles().Select(x => x.FullName), settings, progress, cancellationToken.Token);
-            btn_start.IsEnabled = true;
-            btn_cancel.IsEnabled = false;
+            isRunning = true;
+            updateStates();
+            await SoundVolumeEvener.RunSoundVolumeEvening(new DirectoryInfo(tb_inputDirectory.Text).EnumerateFiles().Select(x => x.FullName), settings, progress, cancellationTokenSource.Token);
+            isRunning = false;
+            updateStates();
         }
 
         private void Btn_cancel_Click(object sender, RoutedEventArgs e)
         {
-            cancellationToken.Cancel();
+            cancellationTokenSource.Cancel();
+        }
 
-            btn_start.IsEnabled = true;
-            btn_cancel.IsEnabled = false;
+        private void OnCanceled()
+        {
+            isRunning = false;
+
+            updateStates();
         }
 
         private void updateStates()
         {
-            if (tb_inputDirectory.Text.Length > 0 && tb_outputDirectory.Text.Length > 0)
+            if (isRunning)
             {
-                btn_start.IsEnabled = true;
+                btn_start.IsEnabled = false;
+                btn_cancel.IsEnabled = true;
+                btn_chooseInputDirectory.IsEnabled = false;
+                btn_chooseOutputDirectory.IsEnabled = false;
             }
             else
             {
-                btn_start.IsEnabled = false;
+                btn_cancel.IsEnabled = false;
+                btn_chooseInputDirectory.IsEnabled = true;
+                btn_chooseOutputDirectory.IsEnabled = true;
+
+                if (tb_inputDirectory.Text.Length > 0 && tb_outputDirectory.Text.Length > 0)
+                {
+                    btn_start.IsEnabled = true;
+                }
+                else
+                {
+                    btn_start.IsEnabled = false;
+                }
             }
         }
     }
