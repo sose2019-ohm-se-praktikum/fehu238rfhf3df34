@@ -1,0 +1,40 @@
+@startuml
+
+actor UI
+
+UI -> AudioFileManager: CheckForOvermodulation
+activate AudioFileManager
+|||
+AudioFileManager -> AudioFile: WouldFit
+note left: for each open AudioFile
+activate AudioFile
+AudioFileManager <-- AudioFile: true
+deactivate AudioFile
+UI <-- AudioFileManager: true
+deactivate AudioFileManager
+
+UI -> AudioFileManager: AdjustFiles
+activate AudioFileManager
+|||
+AudioFileManager -> AudioFile: AdjustSamples
+note left: for each open AudioFile
+activate AudioFile
+AudioFile -> AudioFile: WouldFit
+AudioFile <-- AudioFile: true
+AudioFile -> WaveSound: DecodeSamples
+activate WaveSound
+WaveSound -> WaveSound: Read
+note right: called multiple times
+AudioFile <-- WaveSound: samples
+deactivate WaveSound
+AudioFile -> AudioFile: AdjustmentFormula
+AudioFile -> WaveSound: EncodeSamples
+activate WaveSound
+AudioFile <-- WaveSound: buffer
+deactivate WaveSound
+AudioFileManager <-- AudioFile
+deactivate AudioFile
+UI <-- AudioFileManager: true
+deactivate AudioFileManager
+
+@enduml
