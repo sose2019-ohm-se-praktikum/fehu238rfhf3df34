@@ -36,7 +36,7 @@ class WaveSound extends AudioFile {
 }
 
 class AudioFileManager {
-    {static}-files: Dictionary<string, AudioFile> = new Dictionary<string, AudioFile>(new PathComparer())
+    {static}-files: Dictionary<string, AudioFile>
     
     {static}+OpenFile(path: string)
     {static}+CloseFile(path: string)
