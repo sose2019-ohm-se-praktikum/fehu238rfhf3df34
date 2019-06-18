@@ -1,0 +1,19 @@
+@startuml
+
+title Zustandsdiagramm einer Audiodatei(=AD)
+hide empty description
+
+[*] --> Skipped : AD hinzugefügt
+Skipped -down-> Pending : AD selektiert
+Pending -up-> Skipped : AD deselektiert
+Pending -left-> Succeeded : AD Bearbeitung erfolgreich
+Pending -right-> Failed : AD Bearbeitung fehlgeschlagen
+
+Skipped --> [*]
+Succeeded --> [*]
+Failed --> [*]
+
+Pending : entry/openFile()
+Pending : exit/closeFile()
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+title Zustandsdiagramm der Anwendung
+hide empty description
+
+[*] -> No_Item_Selected : Anwendung gestartet
+No_Item_Selected -> Item_Selected : Audiodatei selektiert
+Item_Selected -left-> No_Item_Selected : Alle Audiodateien deselektiert
+Item_Selected -> Running : Start gedrückt
+Running -left-> No_Item_Selected : Bearbeitung abgeschlossen
+
+Item_Selected : entry/Startbutton freigeben
+Item_Selected : exit/Startbutton sperren
+Running: entry/Alle selektierten Audiodateien auf 'Pending' setzen
+Running: exit/Alle selektierten Audiodateien deselektieren
+
+No_Item_Selected --> [*] : Anwendung geschlossen
+Item_Selected --> [*] : Anwendung geschlossen
+Running --> [*] : Anwendung geschlossen
+
+@enduml
