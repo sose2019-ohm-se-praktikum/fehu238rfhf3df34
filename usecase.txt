@@ -1,0 +1,15 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor User
+rectangle "Normalize a set of files" {
+usecase Normalize as "Normalize
+--
+EP1: Have spezial orientation files
+"
+
+  User -> (Normalize)
+  (Normalize) .> (input files) : <<include>>
+  (select orientation files) .> (Normalize) : "<<extends>>  EP1: IF spezial files wanted"
+}
+@enduml
