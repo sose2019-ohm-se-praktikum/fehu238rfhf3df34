@@ -11,10 +11,15 @@ activate AudioFileManager
 AudioFileManager -> AudioFile: WouldFit
 note right: for each open AudioFile
 activate AudioFile
-AudioFileManager <-- AudioFile: true
+|||
+AudioFile -> AudioFile: AdjustmentFormula
+activate AudioFile
+AudioFile <-- AudioFile: peak: double
+deactivate AudioFile
+AudioFileManager <-- AudioFile: success: bool
 note right: assuming all goes well
 deactivate AudioFile
-UI <-- AudioFileManager: LinkedList<string>
+UI <-- AudioFileManager: files: LinkedList<string>
 note right: all files that returned false
 deactivate AudioFileManager
 UI -> AudioFileManager: AdjustFiles
@@ -22,19 +27,30 @@ activate AudioFileManager
 AudioFileManager -> AudioFile: AdjustSamples
 note right: for each open AudioFile
 activate AudioFile
+|||
 AudioFile -> AudioFile: WouldFit
-AudioFile <-- AudioFile: true
+activate AudioFile
+AudioFile <-- AudioFile: success: bool
+deactivate AudioFile
 note right: exception if false
 AudioFile -> WaveSound: DecodeSamples
 activate WaveSound
 WaveSound -> WaveSound: Read
+activate WaveSound
 note right: called multiple times
-AudioFile <-- WaveSound: samples
+WaveSound <-- WaveSound: sequence: int
 deactivate WaveSound
+AudioFile <-- WaveSound: samples: double[]
+deactivate WaveSound
+|||
 AudioFile -> AudioFile: AdjustmentFormula
+note right: for each sample
+activate AudioFile
+AudioFile <-- AudioFile: sample: double
+deactivate AudioFile
 AudioFile -> WaveSound: EncodeSamples
 activate WaveSound
-AudioFile <-- WaveSound: buffer
+AudioFile <-- WaveSound: buffer: byte[]
 deactivate WaveSound
 AudioFileManager <-- AudioFile
 deactivate AudioFile
