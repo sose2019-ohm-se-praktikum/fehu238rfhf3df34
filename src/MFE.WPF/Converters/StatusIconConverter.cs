@@ -27,6 +27,9 @@ namespace MFE.WPF.Converters
                 case Status.Succeeded:
                     icon = "Succeeded";
                     break;
+                case Status.Warning:
+                    icon = "Warning";
+                    break;
                 case Status.Failed:
                     icon = "Failed";
                     break;

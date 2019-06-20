@@ -7,8 +7,6 @@
     xmlns:dd="urn:gong-wpf-dragdrop"
     xmlns:local="clr-namespace:MFE.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="1080"
-    Height="720"
     d:DesignHeight="450"
     d:DesignWidth="800"
     dd:DragDrop.DropHandler="{Binding}"
@@ -33,6 +31,8 @@
             <RowDefinition Height="42" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -152,5 +152,46 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
+
+        <StackPanel
+            Grid.Row="4"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle
+                    Width="24"
+                    Height="24"
+                    Fill="{StaticResource Skipped}" />
+                <Label Content="= Übersprungen" />
+            </StackPanel>
+            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <Rectangle
+                    Width="24"
+                    Height="24"
+                    Fill="{StaticResource Pending}" />
+                <Label Content="= In Bearbeitung" />
+            </StackPanel>
+            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <Rectangle
+                    Width="24"
+                    Height="24"
+                    Fill="{StaticResource Succeeded}" />
+                <Label Content="= Erfolgreich" />
+            </StackPanel>
+            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <Rectangle
+                    Width="24"
+                    Height="24"
+                    Fill="{StaticResource Warning}" />
+                <Label Content="= Übersprungen (wegen Overmodulation)" />
+            </StackPanel>
+            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <Rectangle
+                    Width="24"
+                    Height="24"
+                    Fill="{StaticResource Failed}" />
+                <Label Content="= Fehler (siehe Tooltip)" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

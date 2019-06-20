@@ -8,6 +8,7 @@ namespace MFE.WPF.ViewModels
         Skipped,
         Pending,
         Succeeded,
+        Warning,
         Failed
     }
 
@@ -98,7 +99,7 @@ namespace MFE.WPF.ViewModels
         }
 
         private string thrownException;
-        public String ThrownException
+        public string ThrownException
         {
             get { return thrownException; }
             set

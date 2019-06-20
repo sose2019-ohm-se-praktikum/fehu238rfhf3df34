@@ -83,6 +83,17 @@ namespace MFE.WPF.ViewModels
             }
 
             IsRunning = true;
+            var overmodulatedFiles = await AudioFileManager.CheckForOvermodulation(ProgressChanged, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName));
+            foreach (var file in overmodulatedFiles)
+            {
+                var soundFile = SoundFiles.First(x => x.FullName == file);
+                if (soundFile != null)
+                {
+                    soundFile.Status = Status.Warning;
+                    soundFile.IsSelected = false;
+                }
+            }
+
             await AudioFileManager.AdjustFiles(ProgressChanged, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName), FindFileOutputPath, FileSucceeded, FileFailed);
             IsRunning = false;
 
