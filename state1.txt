@@ -6,11 +6,13 @@ hide empty description
 [*] --> Skipped : AD hinzugefügt
 Skipped -down-> Pending : AD selektiert
 Pending -up-> Skipped : AD deselektiert
+Pending -left-> Warning : AD würde Übermodulieren
 Pending -left-> Succeeded : AD Bearbeitung erfolgreich
 Pending -right-> Failed : AD Bearbeitung fehlgeschlagen
 
 Skipped --> [*]
 Succeeded --> [*]
+Warning --> [*]
 Failed --> [*]
 
 Pending : entry/openFile()

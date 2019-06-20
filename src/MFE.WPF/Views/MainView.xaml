@@ -183,7 +183,7 @@
                     Width="24"
                     Height="24"
                     Fill="{StaticResource Warning}" />
-                <Label Content="= Übersprungen (wegen Overmodulation)" />
+                <Label Content="= Übersprungen (wegen Übermodulierung)" />
             </StackPanel>
             <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
                 <Rectangle
