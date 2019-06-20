@@ -1,0 +1,45 @@
+@startuml
+
+object "file1 : WaveSound" as file1 {
+    -_little_endian = true
+    -dataChunkStart = 44
+    -step = 2
+    
+    -path = "E:\music\artist a - song a.wav"
+    -file = {System.IO.FileStream}
+    
+    +Highest = 0.6124
+    +WeightedAverage = 0.3077
+}
+
+object "file2 : WaveSound" as file2 {
+    -_little_endian = true
+    -dataChunkStart = 44
+    -step = 2
+    
+    -path = "E:\music\artist b - song b.wav"
+    -file = {System.IO.FileStream}
+    
+    +Highest = 0.2564
+    +WeightedAverage = 0.1173
+}
+
+object "file3 : WaveSound" as file3 {
+    -_little_endian = false
+    -dataChunkStart = 44
+    -step = 2
+    
+    -path = "E:\music\artist c - song c.wav"
+    -file = {System.IO.FileStream}
+    
+    +Highest = 0.9513
+    +WeightedAverage = 0.6628
+}
+
+object "AudioFileManager.files : Dictionary<string, AudioFile>" as files
+
+files o-- file1
+files o-- file2
+files o-- file3
+
+@enduml
