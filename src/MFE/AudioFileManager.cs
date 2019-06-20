@@ -52,26 +52,28 @@ namespace MFE
     /// <param name="progress">the action to perform when progress is made (parameter: progression [0,1])</param>
     /// <param name="factor">the factor to multiply the average volume with</param>
     /// <param name="ReferenceFiles">the files from which the average volume will be used to test all open files - if null or empty, then all files will be tested independently</param>
-    /// <returns>true if all fits, false if at least one file overmodulates</returns>
-    public static Task<bool> CheckForOvermodulation(Action<float> progress, double factor, IEnumerable<string> ReferenceFiles)
+    /// <returns>an enumeration of all overmodulating files; an empty one if all fits</returns>
+    public static Task<LinkedList<string>> CheckForOvermodulation(Action<float> progress, double factor, IEnumerable<string> ReferenceFiles)
     {
       return Task.Run(() => {
-        bool result = true;
+        LinkedList<string> list = new LinkedList<string>();
         float total = files.Count, current = 0f;
         if (ReferenceFiles == null || ReferenceFiles.Count() < 1) {
           foreach (KeyValuePair<string, AudioFile> pair in files) {
-            result &= pair.Value.WouldFit(factor * pair.Value.WeightedAverage);
+            if (!pair.Value.WouldFit(factor * pair.Value.WeightedAverage))
+              list.AddLast(pair.Key);
             progress(++current / total);
           }
         }
         else {
           double target = files.Where(pair => ReferenceFiles.Contains(pair.Key, new PathComparer())).Average(pair => pair.Value.WeightedAverage) * factor;
           foreach (KeyValuePair<string, AudioFile> pair in files) {
-            result &= pair.Value.WouldFit(target);
+            if(! pair.Value.WouldFit(target))
+              list.AddLast(pair.Key);
             progress(++current / total);
           }
         }
-        return result;
+        return list;
       });
     }
 
