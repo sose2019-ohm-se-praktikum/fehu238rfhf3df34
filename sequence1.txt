@@ -1,8 +1,11 @@
 @startuml
 
-actor UI
+actor User
 
+activate User
 activate UI
+User -> UI: Click "Start"
+note right: assuming user already selected soundfiles to process
 UI -> AudioFileManager: CheckForOvermodulation
 activate AudioFileManager
 AudioFileManager -> AudioFile: WouldFit
@@ -36,7 +39,9 @@ deactivate WaveSound
 AudioFileManager <-- AudioFile
 deactivate AudioFile
 UI <-- AudioFileManager
+User <-- UI
 deactivate AudioFileManager
 deactivate UI
+deactivate User
 
 @enduml
