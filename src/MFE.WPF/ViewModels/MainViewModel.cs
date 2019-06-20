@@ -69,8 +69,6 @@ namespace MFE.WPF.ViewModels
 
         public async void Start()
         {
-            var progress = new Progress<ProgressInfo>(ProgressChanged);
-
             foreach (var file in SoundFiles)
             {
                 file.ThrownException = null;
@@ -85,7 +83,7 @@ namespace MFE.WPF.ViewModels
             }
 
             IsRunning = true;
-            await AudioFileManager.AdjustFiles(progress, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName), FindFileOutputPath, FileSucceeded, FileFailed);
+            await AudioFileManager.AdjustFiles(ProgressChanged, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName), FindFileOutputPath, FileSucceeded, FileFailed);
             IsRunning = false;
 
             foreach (var file in SoundFiles)
@@ -95,9 +93,9 @@ namespace MFE.WPF.ViewModels
             }
         }
 
-        private void ProgressChanged(ProgressInfo progressInfo)
+        private void ProgressChanged(float progress)
         {
-            Progress = (int)(progressInfo.Progression * 100);
+            Progress = (int)(progress * 100);
         }
 
         private string FindFileOutputPath(string file)

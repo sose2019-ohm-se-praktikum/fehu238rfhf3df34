@@ -109,11 +109,14 @@
                     <Grid Margin="0,2.5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="160" />
                             <ColumnDefinition Width="50" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,10,0">
+                        <StackPanel
+                            Grid.Column="0"
+                            Margin="0,0,10,0"
+                            Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Eingabe:" />
                                 <Label Content="{Binding FullName}" />
