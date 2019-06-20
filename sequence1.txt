@@ -2,25 +2,26 @@
 
 actor UI
 
+activate UI
 UI -> AudioFileManager: CheckForOvermodulation
 activate AudioFileManager
-|||
 AudioFileManager -> AudioFile: WouldFit
-note left: for each open AudioFile
+note right: for each open AudioFile
 activate AudioFile
 AudioFileManager <-- AudioFile: true
+note right: assuming all goes well
 deactivate AudioFile
-UI <-- AudioFileManager: true
+UI <-- AudioFileManager: LinkedList<string>
+note right: all files that returned false
 deactivate AudioFileManager
-
 UI -> AudioFileManager: AdjustFiles
 activate AudioFileManager
-|||
 AudioFileManager -> AudioFile: AdjustSamples
-note left: for each open AudioFile
+note right: for each open AudioFile
 activate AudioFile
 AudioFile -> AudioFile: WouldFit
 AudioFile <-- AudioFile: true
+note right: exception if false
 AudioFile -> WaveSound: DecodeSamples
 activate WaveSound
 WaveSound -> WaveSound: Read
@@ -34,7 +35,8 @@ AudioFile <-- WaveSound: buffer
 deactivate WaveSound
 AudioFileManager <-- AudioFile
 deactivate AudioFile
-UI <-- AudioFileManager: true
+UI <-- AudioFileManager
 deactivate AudioFileManager
+deactivate UI
 
 @enduml
