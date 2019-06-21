@@ -5,11 +5,18 @@ actor User
 rectangle "Normalize a set of files" {
 usecase Normalize as "Normalize
 --
-EP1: Have spezial orientation files
-"
+EP1: Have spezial orientation files"
+usecase Alter as "Alter Volume
+-- 
+EP1: Normalize and Alter"
+usecase Open as "Open" 
 
-  User -> (Normalize)
-  (Normalize) .> (input files) : <<include>>
+  User -- (Open)
+  User -- (Normalize)
+  User -- (Alter)
+  (Alter) .> (Open) : <<inclue>>
+  (Normalize) ..> (Alter) : "<<extends>> EP1 : "IF Normalisation is wanted"
+  (Normalize) ..> (Open) : <<include>>
   (select orientation files) .> (Normalize) : "<<extends>>  EP1: IF spezial files wanted"
 }
 @enduml
