@@ -121,7 +121,6 @@
                         <StackPanel
                             Grid.Column="0"
                             Margin="0,0,10,0"
-                            IsEnabled="{Binding IsValidSoundFile}"
                             Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Eingabe:" />
@@ -133,10 +132,7 @@
                             </DockPanel>
                         </StackPanel>
 
-                        <Grid
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            IsEnabled="{Binding IsValidSoundFile}">
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
                             <CheckBox Content="Referenz für BaseVolume" IsChecked="{Binding IsSelectedBaseVolumeFile}" />
                         </Grid>
 

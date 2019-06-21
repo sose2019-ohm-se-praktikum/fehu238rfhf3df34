@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace MFE.WPF.ViewModels
 {
-    public class MainViewModel : PropertyChangedBase, IDropTarget
+    public class MainViewModel : PropertyChangedBase, IDropTarget, IDisposable
     {
         public MainViewModel()
         {
@@ -18,6 +18,11 @@ namespace MFE.WPF.ViewModels
             BaseVolume = 1f;
 
             SoundFiles.ListChanged += SoundFilesListChanged;
+        }
+        
+        ~MainViewModel()
+        {
+            Dispose();
         }
 
         public BindingList<SoundFileViewModel> SoundFiles { get; }
@@ -86,7 +91,12 @@ namespace MFE.WPF.ViewModels
             }
 
             IsRunning = true;
-            var overmodulatedFiles = await AudioFileManager.CheckForOvermodulation(ProgressChanged, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName));
+            var overmodulatedFiles = await AudioFileManager.CheckForOvermodulation(
+                ProgressChanged,
+                BaseVolume,
+                SoundFiles.Where(x => x.IsSelected).Select(x => x.FullName),
+                SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName)
+                );
             foreach (var file in overmodulatedFiles)
             {
                 var soundFile = SoundFiles.First(x => x.FullName == file);
@@ -97,7 +107,14 @@ namespace MFE.WPF.ViewModels
                 }
             }
 
-            await AudioFileManager.AdjustFiles(ProgressChanged, BaseVolume, SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName), FindFileOutputPath, FileSucceeded, FileFailed);
+            await AudioFileManager.AdjustFiles(
+                ProgressChanged,
+                BaseVolume,
+                SoundFiles.Where(x => x.IsSelected).Select(x => x.FullName),
+                SoundFiles.Where(x => x.IsSelectedBaseVolumeFile).Select(x => x.FullName),
+                FindFileOutputPath,
+                FileSucceeded,
+                FileFailed);
             IsRunning = false;
 
             foreach (var file in SoundFiles)
@@ -109,7 +126,11 @@ namespace MFE.WPF.ViewModels
 
         public void Remove(SoundFileViewModel soundFileViewModel)
         {
-            SoundFiles.Remove(soundFileViewModel);
+            if (soundFileViewModel != null)
+            {
+                AudioFileManager.CloseFile(soundFileViewModel.FullName);
+                SoundFiles.Remove(soundFileViewModel);
+            }
         }
 
         private void ProgressChanged(float progress)
@@ -158,7 +179,10 @@ namespace MFE.WPF.ViewModels
                     .ToList();
                 foreach (var fileViewModel in fileViewModels)
                 {
-                    SoundFiles.Add(fileViewModel);
+                    if (AudioFileManager.OpenFile(fileViewModel.FullName))
+                    {
+                        SoundFiles.Add(fileViewModel);
+                    }
                 }
             }
 
@@ -169,5 +193,16 @@ namespace MFE.WPF.ViewModels
             return ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>().ToList();
         }
         #endregion
+
+        public void Dispose()
+        {
+            try
+            {
+                AudioFileManager.CloseAll();
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }
