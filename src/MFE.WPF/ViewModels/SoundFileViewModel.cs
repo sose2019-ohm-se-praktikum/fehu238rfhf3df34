@@ -56,18 +56,23 @@ namespace MFE.WPF.ViewModels
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    NotifyOfPropertyChange();
 
                     if (value)
                     {
                         // selected
-                        AudioFileManager.OpenFile(FullName);
+                        if (AudioFileManager.OpenFile(FullName) == false)
+                        {
+                            isSelected = false;
+                            IsValidSoundFile = false;
+                        }
                     }
                     else
                     {
                         // deselected
                         AudioFileManager.CloseFile(FullName);
                     }
+
+                    NotifyOfPropertyChange();
                 }
             }
         }
@@ -117,6 +122,20 @@ namespace MFE.WPF.ViewModels
             get
             {
                 return Status == Status.Failed;
+            }
+        }
+
+        private bool isValidSoundFile = true;
+        public bool IsValidSoundFile
+        {
+            get { return isValidSoundFile; }
+            set
+            {
+                if (isValidSoundFile != value)
+                {
+                    isValidSoundFile = value;
+                    NotifyOfPropertyChange();
+                }
             }
         }
     }

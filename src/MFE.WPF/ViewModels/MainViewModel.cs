@@ -33,9 +33,12 @@ namespace MFE.WPF.ViewModels
             {
                 isRunning = value;
                 NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => IsNotRunning);
                 NotifyOfPropertyChange(() => CanStart);
             }
         }
+
+        public bool IsNotRunning => !IsRunning;
 
         private int progress;
         public int Progress
@@ -104,6 +107,11 @@ namespace MFE.WPF.ViewModels
             }
         }
 
+        public void Remove(SoundFileViewModel soundFileViewModel)
+        {
+            SoundFiles.Remove(soundFileViewModel);
+        }
+
         private void ProgressChanged(float progress)
         {
             Progress = (int)(progress * 100);
@@ -158,7 +166,7 @@ namespace MFE.WPF.ViewModels
 
         private List<string> dropDataToFileList(IDropInfo dropInfo)
         {
-            return ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>().Where(file => Path.GetExtension(file).ToLower() == ".wav").ToList();
+            return ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>().ToList();
         }
         #endregion
     }
