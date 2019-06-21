@@ -13,13 +13,20 @@ namespace MFE
     /// Opens the specified file.
     /// </summary>
     /// <param name="path">the path to the file</param>
-    public static void OpenFile(string path)
+    /// <returns>true on success, false on failure</returns>
+    public static bool OpenFile(string path)
     {
       try {
         files[path].Dispose();
       }
       catch { }
-      files[path] = AudioFile.OpenFile(path);
+      AudioFile file = AudioFile.OpenFile(path);
+      if (file == null)
+        return false;
+      else {
+        files[path] = file;
+        return true;
+      }
     }
 
     /// <summary>
