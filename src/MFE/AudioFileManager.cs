@@ -53,29 +53,30 @@ namespace MFE
     }
 
     /// <summary>
-    /// Checks all open files for overmodulation.
+    /// Checks files for overmodulation.
     /// </summary>
     /// <param name="progress">the action to perform when progress is made (parameter: progression [0,1])</param>
     /// <param name="factor">the factor to multiply the average volume with</param>
+    /// <param name="SelectedFiles">the files to adjust</param>
     /// <param name="ReferenceFiles">the files from which the average volume will be used to test all open files - if null or empty, then all files will be tested independently</param>
     /// <returns>an enumeration of all overmodulating files; an empty one if all fits</returns>
-    public static Task<LinkedList<string>> CheckForOvermodulation(Action<float> progress, double factor, IEnumerable<string> ReferenceFiles)
+    public static Task<LinkedList<string>> CheckForOvermodulation(Action<float> progress, double factor, IEnumerable<string> SelectedFiles, IEnumerable<string> ReferenceFiles)
     {
       return Task.Run(() => {
         LinkedList<string> list = new LinkedList<string>();
         float total = files.Count, current = 0f;
         if (ReferenceFiles == null || ReferenceFiles.Count() < 1) {
-          foreach (KeyValuePair<string, AudioFile> pair in files) {
-            if (!pair.Value.WouldFit(factor * pair.Value.WeightedAverage))
-              list.AddLast(pair.Key);
+          foreach (string path in SelectedFiles) {
+            if (!files[path].WouldFit(factor * files[path].WeightedAverage))
+              list.AddLast(path);
             progress(++current / total);
           }
         }
         else {
           double target = files.Where(pair => ReferenceFiles.Contains(pair.Key, new PathComparer())).Average(pair => pair.Value.WeightedAverage) * factor;
-          foreach (KeyValuePair<string, AudioFile> pair in files) {
-            if (!pair.Value.WouldFit(target))
-              list.AddLast(pair.Key);
+          foreach (string path in SelectedFiles) {
+            if (!files[path].WouldFit(target))
+              list.AddLast(path);
             progress(++current / total);
           }
         }
@@ -84,40 +85,40 @@ namespace MFE
     }
 
     /// <summary>
-    /// Adjusts all open files and writes them back to disk.
+    /// Adjusts files and writes them back to disk.
     /// </summary>
     /// <param name="progress">the action to perform when progress is made (parameter: progression [0,1])</param>
     /// <param name="factor">the factor to multiply the average volume with</param>
+    /// <param name="SelectedFiles">the files to adjust</param>
     /// <param name="ReferenceFiles">the files from which the average volume will be used to adjust all open files - if null or empty, then all files will be adjusted independently by the factor</param>
     /// <param name="NewPaths">the function that returns the path to save the file from the given path at</param>
     /// <param name="fileSucceed">the action to perform when a file is adjusted successfully (parameter: path to the file in question)</param>
     /// <param name="fileFailed">the action to perform when a file fails to be adjusted (parameters: path to the file in question, exception that marks the failure)</param>
-    /// <returns></returns>
-    public static Task AdjustFiles(Action<float> progress, double factor, IEnumerable<string> ReferenceFiles, Func<string, string> NewPaths, Action<string> fileSucceed, Action<string, Exception> fileFailed)
+    public static Task AdjustFiles(Action<float> progress, double factor, IEnumerable<string> SelectedFiles, IEnumerable<string> ReferenceFiles, Func<string, string> NewPaths, Action<string> fileSucceed, Action<string, Exception> fileFailed)
     {
       return Task.Run(() => {
         float total = files.Count, current = 0f;
         if (ReferenceFiles == null || ReferenceFiles.Count() < 1) {
-          foreach (KeyValuePair<string, AudioFile> pair in files) {
+          foreach (string path in SelectedFiles) {
             try {
-              pair.Value.AdjustSamples(factor * pair.Value.WeightedAverage, NewPaths(pair.Key));
-              fileSucceed(pair.Key);
+              files[path].AdjustSamples(factor * files[path].WeightedAverage, NewPaths(path));
+              fileSucceed(path);
             }
             catch (Exception exception) {
-              fileFailed(pair.Key, exception);
+              fileFailed(path, exception);
             }
             progress(++current / total);
           }
         }
         else {
           double target = files.Where(pair => ReferenceFiles.Contains(pair.Key, new PathComparer())).Average(pair => pair.Value.WeightedAverage) * factor;
-          foreach (KeyValuePair<string, AudioFile> pair in files) {
+          foreach (string path in SelectedFiles) {
             try {
-              pair.Value.AdjustSamples(target, NewPaths(pair.Key));
-              fileSucceed(pair.Key);
+              files[path].AdjustSamples(target, NewPaths(path));
+              fileSucceed(path);
             }
             catch (Exception exception) {
-              fileFailed(pair.Key, exception);
+              fileFailed(path, exception);
             }
             progress(++current / total);
           }
