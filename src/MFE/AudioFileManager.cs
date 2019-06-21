@@ -43,7 +43,6 @@ namespace MFE
       foreach (AudioFile file in files.Values)
         file.Dispose();
       files.Clear();
-      files = null;
     }
 
     /// <summary>
@@ -68,7 +67,7 @@ namespace MFE
         else {
           double target = files.Where(pair => ReferenceFiles.Contains(pair.Key, new PathComparer())).Average(pair => pair.Value.WeightedAverage) * factor;
           foreach (KeyValuePair<string, AudioFile> pair in files) {
-            if(! pair.Value.WouldFit(target))
+            if (!pair.Value.WouldFit(target))
               list.AddLast(pair.Key);
             progress(++current / total);
           }
