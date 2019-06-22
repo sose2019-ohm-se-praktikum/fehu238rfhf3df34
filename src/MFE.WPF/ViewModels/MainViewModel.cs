@@ -179,6 +179,8 @@ namespace MFE.WPF.ViewModels
                     .ToList();
                 foreach (var fileViewModel in fileViewModels)
                 {
+                    fileViewModel.IsSelected = true;
+                    fileViewModel.IsSelectedBaseVolumeFile = true;
                     if (AudioFileManager.OpenFile(fileViewModel.FullName))
                     {
                         SoundFiles.Add(fileViewModel);
