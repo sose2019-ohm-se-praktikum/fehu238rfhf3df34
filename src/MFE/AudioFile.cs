@@ -95,7 +95,7 @@ namespace MFE
             foreach (double sample in samples)
             {
                 double weight = WeightFormula(sample / average);
-                dividend += sample * weight;
+                dividend += Math.Abs(sample) * weight;
                 divisor += weight;
             }
             WeightedAverage = dividend / divisor;

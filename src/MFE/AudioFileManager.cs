@@ -64,7 +64,7 @@ namespace MFE
     {
       return Task.Run(() => {
         LinkedList<string> list = new LinkedList<string>();
-        float total = files.Count, current = 0f;
+        float total = SelectedFiles.Count(), current = 0f;
         if (ReferenceFiles == null || ReferenceFiles.Count() < 1) {
           foreach (string path in SelectedFiles) {
             if (!files[path].WouldFit(factor * files[path].WeightedAverage))
@@ -97,7 +97,7 @@ namespace MFE
     public static Task AdjustFiles(Action<float> progress, double factor, IEnumerable<string> SelectedFiles, IEnumerable<string> ReferenceFiles, Func<string, string> NewPaths, Action<string> fileSucceed, Action<string, Exception> fileFailed)
     {
       return Task.Run(() => {
-        float total = files.Count, current = 0f;
+        float total = SelectedFiles.Count(), current = 0f;
         if (ReferenceFiles == null || ReferenceFiles.Count() < 1) {
           foreach (string path in SelectedFiles) {
             try {
